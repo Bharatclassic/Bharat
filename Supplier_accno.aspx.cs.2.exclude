@@ -1,0 +1,499 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.OleDb;
+using System.Configuration;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.Services;
+using System.Net.NetworkInformation;
+using System.Management;
+using System.Runtime.InteropServices; 
+using AlertMessageName;
+ using System.Drawing;
+public partial class Customeraccno : System.Web.UI.Page
+{
+    ClsBALSupplieraccount clsbal = new ClsBALSupplieraccount();
+    ClsBLLGeneraldetails ClsBLGD = new ClsBLLGeneraldetails();
+    Dbconn dbcon = new Dbconn();
+    protected static string filename = Dbconn.Mymenthod();
+    protected static string strconn11 = Dbconn.conmenthod();
+    string sMacAddress = "";
+    double calc;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        lblerror.Visible = false;
+        lblsuccess.Visible = false;
+        if(!Page.IsPostBack)
+        {
+            txtsupcode.Enabled = true;
+            txtsupcode.Focus();
+            System.DateTime Dtnow = DateTime.Now;
+            txtdate.Text = Dtnow.ToString("dd/MM/yyyy");
+            txtdate1.Text = Dtnow.ToString("dd/MM/yyyy");
+            
+        }
+        GetMACAddress();
+        //cal();
+        
+
+        ClientScript.RegisterStartupScript(this.GetType(), "SetInitialFocus", "<script>document.getElementById('" + txtsupcode.ClientID + "').focus();</script>");
+        btnexit.Attributes.Add("onkeydown", "if(event.which || event.keyCode)" + "{if ((event.which == 9) || (event.keyCode == 9)) " + "{document.getElementById('" + txtsupcode.ClientID + "').focus();return false;}} else {return true}; ");
+
+    }
+    [System.Web.Services.WebMethodAttribute(), System.Web.Script.Services.ScriptMethodAttribute()]
+    public static List<string> Suppliercode(string prefixText)
+    {
+        
+
+            // string filename = Dbconn.Mymenthod();
+            if (!File.Exists(filename))
+            {
+                //string oConn = ConfigurationManager.AppSettings["ConnectionString"];
+                SqlConnection conn = new SqlConnection(strconn11);
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select Suppliercode from tblsuppliermaster where SupplierCode like @1+'%'", conn);
+                cmd.Parameters.AddWithValue("@1", prefixText);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                List<string> Suppliercode = new List<string>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Suppliercode.Add(dt.Rows[i][0].ToString());
+                }
+                return Suppliercode;
+            }
+            else
+            {
+                //string strconn1 = Dbconn.conmenthod();
+                OleDbConnection conn = new OleDbConnection(strconn11);
+                conn.Open();
+                OleDbCommand cmd = new OleDbCommand("select Suppliercode from tblsuppliermaster where Suppliercode like @1+'%'", conn);
+                cmd.Parameters.AddWithValue("@1", prefixText);
+                OleDbDataAdapter oda = new OleDbDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                oda.Fill(dt);
+                List<string> Suppliercode = new List<string>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Suppliercode.Add(dt.Rows[i][0].ToString());
+                }
+
+                return Suppliercode;
+            }
+        
+        
+    }
+
+    [System.Web.Services.WebMethodAttribute(), System.Web.Script.Services.ScriptMethodAttribute()]
+    public static List<string> Suppliername(string prefixText)
+    {
+        
+            //string filename = Dbconn.Mymenthod();
+            if (!File.Exists(filename))
+            {
+                //string oConn = ConfigurationManager.AppSettings["ConnectionString"];
+                SqlConnection conn = new SqlConnection(strconn11);
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("select SupplierName from tblsuppliermaster where SupplierName like @1+'%'", conn);
+                cmd.Parameters.AddWithValue("@1", prefixText);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                List<string> Suppliername = new List<string>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Suppliername.Add(dt.Rows[i][0].ToString());
+                }
+                return Suppliername;
+            }
+            else
+            {
+                //string strconn1 = Dbconn.conmenthod();
+                OleDbConnection conn = new OleDbConnection(strconn11);
+                conn.Open();
+                OleDbCommand cmd = new OleDbCommand("select SupplierName from tblsuppliermaster where SupplierName like @1+'%'", conn);
+                cmd.Parameters.AddWithValue("@1", prefixText);
+                OleDbDataAdapter oda = new OleDbDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                oda.Fill(dt);
+                List<string> Suppliername = new List<string>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    Suppliername.Add(dt.Rows[i][0].ToString());
+                }
+                return Suppliername;
+            }
+        
+        
+    }
+    protected void txtsupcode_TextChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            txtsupcode.BackColor = Color.LightBlue;     
+            string supcode = txtsupcode.Text;
+            int sucode=Convert.ToInt32(supcode);
+            DataSet ds1=ClsBLGD.GetcondDataSetint("*", "tblsuppliermaster", "Suppliercode", sucode);
+         //   DataSet ds1 = ClsBLGD.GetcondDataSet("*", "tblsuppliermaster", "Suppliercode", supcode);
+            if (ds1.Tables[0].Rows.Count > 0)
+            {
+                string name = ds1.Tables[0].Rows[0]["SupplierName"].ToString();
+                txtsupname.Text = name;
+            }
+            rdtrans.Enabled = true;
+            rdtrans.Focus();
+            cal();
+        }
+           
+        catch (Exception ex)
+        {
+            string asd = ex.Message;
+            lblerror.Visible = true;
+            lblerror.Text = asd;
+        }
+    }
+    protected void txtsupname_TextChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            string supname = txtsupname.Text;
+            DataSet ds1 = ClsBLGD.GetcondDataSet("*", "tblsuppliermaster", "SupplierName", supname);
+            if (ds1.Tables[0].Rows.Count > 0)
+            {
+                string code = ds1.Tables[0].Rows[0]["Suppliercode"].ToString();
+                txtsupcode.Text = code;
+            }
+            rdtrans.Enabled = true;
+            rdtrans.Focus();
+        }
+        catch (Exception ex)
+        {
+            string asd = ex.Message;
+            lblerror.Visible = true;
+            lblerror.Text = asd;
+        }
+
+    }
+    public void cal()
+    {
+        try
+        {
+            double g;
+            double h;
+            double a;
+            double gh;
+            SqlConnection con = new SqlConnection(strconn11);
+            SqlCommand cmd = new SqlCommand("select * from tblSupplieraccount where SupplierCode='" + txtsupcode.Text + "'", con);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                SqlCommand cmd1 = new SqlCommand("select sum(Totalvalues) as Totalvalues from tblSupplieraccount where SupplierCode='" + txtsupcode.Text + "' and Paymenttype='CA' and Typeoftransaction='D'", con);
+                SqlDataAdapter da1 = new SqlDataAdapter(cmd1);
+                DataSet ds1 = new DataSet();
+                
+                da1.Fill(ds1);
+
+                if (ds1.Tables[0].Rows.Count > 0)
+                {
+                    if (ds1.Tables[0].Rows[0].IsNull("Totalvalues"))
+                    {
+                        g = 0;
+                    }
+                    else
+                    {
+                        g = Convert.ToInt32(ds1.Tables[0].Rows[0]["Totalvalues"].ToString());
+                    }
+                }
+                else
+                {
+                    g = 0;
+                }
+               
+                SqlCommand cmd11 = new SqlCommand("select sum(Totalvalues) as Totalvalues from tblSupplieraccount where SupplierCode='" + txtsupcode.Text + "' and Paymenttype='CR' and Typeoftransaction='D'", con);
+                SqlDataAdapter da11 = new SqlDataAdapter(cmd11);
+                DataSet ds11 = new DataSet();
+                da11.Fill(ds11);
+                if (ds11.Tables[0].Rows.Count > 0)
+                {
+                    if (ds11.Tables[0].Rows[0].IsNull("Totalvalues"))
+                    {
+                        h = 0;
+                    }
+                    else
+                    {
+                        h = Convert.ToInt32(ds11.Tables[0].Rows[0]["Totalvalues"].ToString());
+                    }
+                }
+                else
+                {
+                    h = 0;
+                }
+                gh = g + h;
+                SqlCommand cmd112 = new SqlCommand("select sum(Totalvalues) as Totalvalues from tblSupplieraccount where SupplierCode='" + txtsupcode.Text + "' and Paymenttype='CR' and Typeoftransaction='C'", con);
+                SqlDataAdapter da112 = new SqlDataAdapter(cmd112);
+                DataSet ds112 = new DataSet();
+                da112.Fill(ds112);
+                if (ds112.Tables[0].Rows.Count > 0)
+                {
+                    if (ds112.Tables[0].Rows[0].IsNull("Totalvalues"))
+                    {
+                        a = 0;
+                    }
+                    else
+                    {
+                        a = Convert.ToInt32(ds112.Tables[0].Rows[0]["Totalvalues"].ToString());
+                    }
+                }
+                else
+                {
+                    a = 0;
+                }
+                calc = gh - a;
+                if (calc > 0)
+                {
+                    txtbal.BackColor = Color.Yellow;
+                    txtbal.Text = Convert.ToString(calc);
+                }
+                else
+                {
+                    txtbal.BackColor = Color.Red;
+                    txtbal.Text = Convert.ToString(calc);
+                }
+            }
+            else
+            {
+            }
+        }
+        catch (Exception ex)
+        {
+            string asd = ex.Message;
+            lblerror.Visible = true;
+            lblerror.Text = asd;
+        }
+        
+    }
+    public string GetMACAddress()
+    {
+        NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+        //  String sMacAddress = string.Empty;
+        foreach (NetworkInterface adapter in nics)
+        {
+            if (sMacAddress == String.Empty)// only return MAC Address from first card  
+            {
+                IPInterfaceProperties properties = adapter.GetIPProperties();
+                sMacAddress = adapter.GetPhysicalAddress().ToString();
+            }
+            // sMacAddress = sMacAddress.Replace(":", "");
+        } return sMacAddress;
+    }
+    protected void btnsave_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string Paymenttype;
+            string Typeoftransaction;
+            string invoiceno = "0";
+            string invoicedate = "01/01/1990";
+            if (rdpay.SelectedIndex == 0)
+            {
+                 Paymenttype = "CA";
+            }
+            else
+            {
+                 Paymenttype = "CR";
+            }
+            string Paymentflag = "Y";
+            string SupplierCode = txtsupcode.Text;
+            string Indate = txtdate.Text;
+            if (rdtrans.SelectedIndex == 0)
+            {
+                 Typeoftransaction = "C";
+            }
+            else
+            {
+                 Typeoftransaction ="D";
+            }
+            
+            string Vouchrno = txtvou.Text;
+            string Totalvalues = txtamt.Text;
+            string Bankaccno = txtaccno.Text;
+            string Chequeno = txtchqno.Text;
+            string Chequedate = txtdate1.Text;
+            string Narration = txtaddress.Text;
+            string Tr_no = "0";
+            string Login_name = Session["username"].ToString();
+            System.DateTime Dtnow = DateTime.Now;
+            string Sysdatetime = Dtnow.ToString("dd/MM/yyyy hh:mm:ss");
+            string Mac_id = sMacAddress;
+            
+            
+            if (rdpay.SelectedIndex == 0)
+            {
+                if (txtaccno.Text == "")
+                {
+                    Bankaccno = "0";
+                }
+                if (txtchqno.Text == "")
+                {
+                    Chequeno = "0";
+                }
+                if (txtdate1.Text == "")
+                {
+                    Chequedate = ("01/01/1990");
+                }
+                
+                if (txtsupcode.Text == "")
+                {
+                    Master.ShowModal("Supplier Code mandatory", "txtdoorno", 0);
+                    return;
+                }
+
+                if (txtsupname.Text == "")
+                {
+                    Master.ShowModal("Supplier Name mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (rdtrans.Text == "")
+                {
+                    Master.ShowModal("Transation Type  mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (rdpay.Text == "")
+                {
+                    Master.ShowModal("Payment Type  mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (txtamt.Text == "")
+                {
+                    Master.ShowModal("Amount mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (txtvou.Text == "")
+                {
+                    Master.ShowModal("Voucher No mandatory", "txtdoorno", 0);
+                    return;
+                }
+                clsbal.Supplieraccno("INSERT_SUPPLIERACCOUNT", invoiceno, invoicedate, Paymenttype, Paymentflag, SupplierCode, Indate, Typeoftransaction, Vouchrno, Totalvalues, Bankaccno, Chequeno, Chequedate, Narration, Tr_no, Login_name, Sysdatetime, Mac_id);
+                
+            }
+            if (rdpay.SelectedIndex == 1)
+            {
+                
+                if (txtsupcode.Text == "")
+                {
+                    Master.ShowModal("Supplier Code mandatory", "txtdoorno", 0);
+                    return;
+                }
+
+                if (txtsupname.Text == "")
+                {
+                    Master.ShowModal("Supplier Name mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (rdtrans.Text == "")
+                {
+                    Master.ShowModal("Transation Type  mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (rdpay.Text == "")
+                {
+                    Master.ShowModal("Payment Type  mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (txtamt.Text == "")
+                {
+                    Master.ShowModal("Amount mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (txtvou.Text == "")
+                {
+                    Master.ShowModal("Voucher No mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (txtaccno.Text == "")
+                {
+                    Master.ShowModal("Account No mandatory", "txtdoorno", 0);
+                    return;
+                }
+                if (txtchqno.Text == "")
+                {
+                    Master.ShowModal("Chquee No mandatory", "txtdoorno", 0);
+                    return;
+                }
+                clsbal.Supplieraccno("INSERT_SUPPLIERACCOUNT", invoiceno, invoicedate, Paymenttype, Paymentflag, SupplierCode, Indate, Typeoftransaction, Vouchrno, Totalvalues, Bankaccno, Chequeno, Chequedate, Narration, Tr_no, Login_name, Sysdatetime, Mac_id);
+
+            }
+            lblsuccess.Visible = true;
+            lblsuccess.Text = "inserted successfully";
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", "HideLabel();", true);
+            cal();
+            txtsupcode.Text = string.Empty;
+            txtsupname.Text = string.Empty;
+            txtamt.Text = string.Empty;
+            txtvou.Text = string.Empty;
+            txtaccno.Text=string.Empty;
+            txtchqno.Text=string.Empty;
+            //txtdate1.Text=string.Empty;
+            txtaddress.Text=string.Empty;
+           
+            
+        }
+        catch (Exception ex)
+        {
+            string asd = ex.Message;
+            lblerror.Visible = true;
+            lblerror.Text = asd;
+        }
+    }
+    protected void rdtrans_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        rdpay.Enabled = true;
+        rdpay.Focus();
+    }
+    protected void rdpay_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (rdpay.SelectedIndex == 0)
+        {
+            txtaccno.Visible = false;
+            lblaccno.Visible = false;
+            txtchqno.Visible = false;
+            lblchqno.Visible = false;
+            txtdate1.Visible = false;
+            lbldate1.Visible = false;
+            ImageButton1.Visible = false;
+        }
+        if (rdpay.SelectedIndex == 1)
+        {
+            txtaccno.Visible = true;
+            lblaccno.Visible = true;
+
+            txtchqno.Visible = true;
+            lblchqno.Visible = true;
+            txtdate1.Visible = true;
+            lbldate1.Visible = true;
+            ImageButton1.Visible = true;
+        }
+        txtamt.Enabled = true;
+        txtamt.Focus();
+    }
+    protected void txtdate1_TextChanged(object sender, EventArgs e)
+    {
+        txtaddress.Enabled = true;
+        txtaddress.Focus();
+    }
+    protected void btnexit_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("Home.aspx");
+    }
+}

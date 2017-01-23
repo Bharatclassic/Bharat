@@ -1,0 +1,243 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Pharmacy.master.cs" Inherits="Pharmacy" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Admin Page</title>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+   </asp:ContentPlaceHolder>
+    <style type="text/css">
+        .style1
+        {
+            width: 100%;
+            background-color: #e60000;
+            height: 1px;
+        }
+        .style2
+        {
+            font-size: 45pt;
+        }
+        
+        .style3
+        {
+            width: 100%;
+            height: 30px;
+            background-color: #e60000;
+        }
+        .style4
+        {
+            width: 100%;
+            height: 600px;
+            background-color: #FFFFFF;
+        }
+        .style6
+        {
+            width: 100%;
+            height: 30px;
+            background-color: #000000;
+        }
+        .style7
+        {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 9px;
+            text-decoration: none;
+            color: #FFFFFF;
+        }
+        .ver11
+        {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 9px;
+        }
+        .style8
+        {
+            font-family: "Courier New";
+        }
+    </style>
+    <meta name="keyword" content="" />
+    <meta name="description" content="" />
+    <meta http-equiv="refresh" content="1200" />
+    <meta http-equiv="Page-Enter" content="Alpha(opacity=100)" />  
+   <meta http-equiv="Page-Enter" content="blendTrans(Duration=0)" />
+   <meta http-equiv="Page-Exit" content="blendTrans(Duration=0)" /> 
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="Styles/Main.css" />
+    <link rel="stylesheet" type="text/css" href="Styles/calender.css" />
+    <link rel="Stylesheet" type="text/css" href="Styles/NewButton.css" />
+    <link rel="Stylesheet" type="text/css" href="Styles/rupees.css" />
+    <%-- <link href="Styles/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="JavaScripts/jquery.min1.js" type="text/javascript"></script>
+    <script src="JavaScripts/jquery-ui.min1.js" type="text/javascript"></script>--%>
+   
+    <%-- <script type="text/javascript" src="JavaScripts/date_time.js"></script>--%>
+    <script type="text/javascript" language="javascript">
+        var clicked = false;
+        function CheckBrowser() {
+            if (clicked == false) {
+                window.location.href = 'LogOut.aspx'
+
+
+            }
+            else {
+                clicked = false;
+            }
+        }
+    </script>
+    <script type="text/javascript" language="javascript">
+        function DisableBackButton() {
+            window.history.forward()
+        }
+        DisableBackButton();
+        window.onload = DisableBackButton;
+        window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+        window.onunload = function () { void (0) }
+    </script>
+</head>
+<body onclick="clicked=true;" onbeforeunload="CheckBrowser()">
+    <form id="form1" runat="server" class="form" >
+    <div>
+        
+                                 
+                
+        <asp:Menu ID="menuBar" runat="server" Font-Bold="True" Height="10px" Orientation="Horizontal"
+            Width="35%" BackColor="#f2f2f2" Font-Names="Courier New "  
+            ForeColor="#000000" ItemWrap="True"
+            Font-Size="Large" style="margin-left: 0px"  
+           >
+            <StaticMenuItemStyle ItemSpacing="200px" HorizontalPadding="2px" VerticalPadding="4px" />
+            <DynamicHoverStyle BackColor="Black" ForeColor="#FFFF66" />
+            <DynamicItemTemplate>
+                <%# Eval("Text") %>
+            </DynamicItemTemplate>
+            <DynamicMenuItemStyle BackColor="#333333" BorderColor="#333333" BorderWidth="3px"
+                ForeColor="White" Font-Names="Shruti" Font-Size="Medium" Height="30px" 
+                ItemSpacing="2px" Width="200px" />
+            <StaticHoverStyle BackColor="#333300" Height="25px" ForeColor="#FFFF66" />
+           
+        </asp:Menu>
+         <table cellpadding="0" cellspacing="1" class="style1" align="center" >
+         <tr>
+         <td align="center">
+         <asp:Label ID="lblbankname" runat="server"  CssClass="Label"></asp:Label>
+         </td>
+         </tr>
+         </table>
+        <table cellpadding="0" cellspacing="1" class="style3">
+            <tr>
+                <td align="center" style="background-color:#0080ff">
+                
+                    <marquee scrolldelay="100" style="font-size: 12pt; color: #FFFFFF; font-family: Verdana;
+                        width:871px; font-weight: bold; margin-left: 204px;">
+                        <asp:Label ID="info1" Visible="false" runat="server" Text="To be ordered :-" CssClass="Label"></asp:Label>&nbsp;&nbsp;&nbsp;
+                        <asp:Label id="lblMarquee" runat="server" ForeColor="White" Font-Bold="True" ></asp:Label></marquee>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    <asp:HyperLink ID="hyplnkClose8" runat="server"  CausesValidation="false"  left= "-350px;" onclick="lnkProduct_Click" href="ProductSearch.aspx" >
+                     <asp:Image ID="imgdelete" runat="server" ImageUrl="~/images/abstract-glossy-search-button-23444949.jpg" />
+                        
+                     </asp:HyperLink>
+                     </td>
+                     <div class="LogOut">
+                    <asp:LinkButton ID="lnkBtnLogout" runat="server" CssClass="LinkButton" ForeColor="Black"
+                         Font-Bold="true" onclick="lnkBtnLogout_Click1"><img src ="Images/logout.png" alt="" style="position:relative;top:5px;" /> Log Out</asp:LinkButton>
+
+                         
+                </div>
+                
+            </tr>
+        </table>
+       
+                    <div class="Clear">
+    </div>
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePartialRendering="true" >
+    </asp:ScriptManager>
+    
+    <div class="MainContent">
+       
+              
+              
+                    
+     
+        <div class="Clear">
+        </div>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        </asp:ContentPlaceHolder>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <table>
+                <tr>
+                <td align="center">
+                <marquee scrolldelay="100" direction="right" style="font-size: 12pt; color:#070707; font-family: Verdana;
+                        width:921px; font-weight: bold; margin-left: 173px;">
+                        <asp:Label ID="info2" Visible="false" runat="server" Text="To be Expired :-" CssClass="Label"></asp:Label>&nbsp;&nbsp;&nbsp;
+                        <asp:Label id="LabelExp" runat="server" BackColor="#070707" ForeColor="White" Font-Bold="True" ></asp:Label></marquee>
+                </td>
+                </tr>
+                </table>
+        <table cellpadding="0" cellspacing="0" class="style6">
+            <tr>
+                 <td style="width: 100%; height: 20px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px;
+                    margin-top: 0px;" align="center" bgcolor="#FFFBD6">
+                  <asp:Label ID="lblEmpName" runat="server" Text="" CssClass="Label"></asp:Label><br />
+                    <asp:Label ID="lblDesignation" runat="server" Text="" Visible="false"></asp:Label>
+                    <asp:Image ID="Image1" Visible = "false" runat="server" Height = "20" Width = "20" />
+                   
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:Label ID="lblTodayDate" runat="server" Text="Date : " CssClass="Label" ></asp:Label>
+                <asp:Label ID="lblTodayDateText" runat="server" Text="" CssClass="Label"></asp:Label>
+                
+                </td>
+            </tr>
+        </table>
+        <table cellpadding="0" cellspacing="0" class="style6">
+            <tr>
+                <td align="center" class="style7">
+                    Powered by <a href="http://www.vagiindia.com" target="_blank">Vagi Data Systems</a>
+                </td>
+            </tr>
+        </table>
+        <asp:HiddenField ID="HiddenField" runat="server" />
+    <asp:ModalPopupExtender ID="ErrorMessage" runat="server" PopupControlID="Panel1"
+        TargetControlID="HiddenField" BackgroundCssClass="modal">
+        <Animations>
+        <OnShown>
+        <FadeIn Duration="0.4" Fps="40"></FadeIn>
+        </OnShown>
+        </Animations>
+    </asp:ModalPopupExtender>
+    
+    <asp:UpdatePanel ID="Panel1" runat="server" Style="display: none;">
+<ContentTemplate>
+        <div align="center" class="ConfirmBoxHeader">
+            <asp:Label ID="lblErrorHead" runat="server" Text="! Error" CssClass="Label" align="center"></asp:Label>
+        </div>
+        <div class="Clear">
+        </div>
+        <div class="ConfirmBox">
+            <div align="center" style="width: 380px; height: 62px; margin: 0 auto;">
+                <div style="float: left;">
+                    <img src="Images/1389184475_Error.png" alt="" />
+                </div>
+                <div style="float: left; width: 300px; text-align: center" align="center">
+                    <asp:Label ID="lblErrorMessage" runat="server" CssClass="Label" ForeColor="Red" align="center"></asp:Label>
+                </div>
+            </div>
+            <div class="Clear">
+            </div>
+            <div align="center">
+                <asp:Button ID="btnCloseError" runat="server" Text="OK" CssClass="Buttons embossed-link"
+                  OnClick="btnCloseError_Click"  />
+            </div>
+        </div>
+           
+    </ContentTemplate>
+    </asp:UpdatePanel>
+    </div>
+    </form>
+</body>
+</html>

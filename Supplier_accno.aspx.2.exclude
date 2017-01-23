@@ -1,0 +1,190 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Pharmacy.master" AutoEventWireup="true" CodeFile="Supplier_accno.aspx.cs" Inherits="Customeraccno" %>
+<%@ MasterType VirtualPath="~/Pharmacy.master" %>
+    <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp"%>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
+   <script type="text/javascript">
+   function HideLabel() {
+           var seconds = 3;
+           setTimeout(function () {
+               document.getElementById("<%=lblsuccess.ClientID %>").style.display = "none";
+           }, seconds * 1000);
+       };
+       </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<fieldset class="BigFieldSet">
+<legend class="BigLegend">
+ <h1 style="position: relative; right: 0px;">
+Supplier Account
+</h1>
+</legend>
+<h3>
+     <asp:Label ID="lblerror" runat="server" Text="" CssClass="ErrorLabel"></asp:Label>
+                <asp:Label ID="lblsuccess" runat="server" Text="" CssClass="SuccessLabel"></asp:Label>
+                </h3>
+                <table id="tbl" align="left">
+                <tr>
+                <td>
+                <asp:Label ID="lbldate" Text="Date" runat="server" CssClass="Label"></asp:Label>
+               &nbsp;<asp:TextBox ID="txtdate" runat="server" AutoPostBack="true"></asp:TextBox>
+                    &nbsp;
+               :
+                <asp:ImageButton  ID="imgCalender" CssClass="Calender" runat="server" ImageUrl="~/Images/calendar.png" />
+                <asp:CalendarExtender ID="taxdate"  runat="server" CssClass="black" Enabled="true" Format="dd/MM/yyyy" TargetControlID="txtdate"  PopupButtonID="imgCalender">
+             <%-- <asp:CalendarExtender ID="Calender1" runat="server" CssClass="black"
+              Enabled="True" Format="dd/MM/yyyy" PopupButtonID="imgCalender" TargetControlID="Calender1">--%>
+              </asp:CalendarExtender>
+                </td>
+                </tr>
+                </table>
+                <table id="tbl1" align="center">
+                <tr>
+                <td>
+                <asp:Label ID="lblbal" Text="Balance" runat="server" CssClass="Label"></asp:Label>
+
+                </td>
+                
+                <td>
+                <asp:Label ID="txtbal" runat="server" CssClass="Label"></asp:Label>
+                </td>
+                </tr>
+                </table>
+               
+                <table id="table" align="center">
+               <tr>
+               <td>
+               <br />
+               <br />
+                <br />
+               <br /> <br />
+               <br /> <br />
+               <br />
+               </td>
+                <td align="left">
+                <asp:Label ID="lblsupcode" Text="Supplier Code:" runat="server" CssClass="Label"></asp:Label>
+                </td>
+                <td>
+                <asp:TextBox ID="txtsupcode" runat="server" CssClass="TextBox" AutoPostBack="true" 
+                        ontextchanged="txtsupcode_TextChanged"></asp:TextBox>
+                <asp:AutoCompleteExtender ID="txtsupcode_AutoCompleteExtender" runat="server" DelimiterCharacters=""
+                               Enabled="True" ServiceMethod="Suppliercode" ServicePath="" TargetControlID="txtsupcode" CompletionListItemCssClass="OtherCompletionItemCssClass"
+                               UseContextKey="True" MinimumPrefixLength="1" CompletionListCssClass="OtherCompletionCssClass"  CompletionListHighlightedItemCssClass="OtherCompletionHighlightedCssClass">
+                    </asp:AutoCompleteExtender>
+                
+                </td>
+            
+                <td>
+                <asp:Label ID="lblsupname" Text="Supplier Name:" runat="server" CssClass="Label">
+                </asp:Label>
+                
+                </td>
+                
+                <td>
+                <asp:TextBox ID="txtsupname" runat="server" CssClass="TextBox" AutoPostBack="true" 
+                        ontextchanged="txtsupname_TextChanged" ></asp:TextBox>
+                <asp:AutoCompleteExtender ID="txtsupname_AutoCompleteExtender" runat="server" DelimiterCharacters=""
+                               Enabled="True" ServiceMethod="Suppliername" ServicePath="" TargetControlID="txtsupname" CompletionListItemCssClass="OtherCompletionItemCssClass"
+                               UseContextKey="True" MinimumPrefixLength="1" CompletionListCssClass="OtherCompletionCssClass"  CompletionListHighlightedItemCssClass="OtherCompletionHighlightedCssClass">
+                    </asp:AutoCompleteExtender>
+                
+                </td>
+                </tr>
+                </table>
+                 
+                    <table id="tbl4" align="center">
+                <tr >
+               
+                <td  >
+                <asp:RadioButtonList ID="rdtrans" runat="server" CssClass="CheckBox" RepeatDirection="Horizontal"
+                         AutoPostBack="True" onselectedindexchanged="rdtrans_SelectedIndexChanged">
+                        <asp:ListItem>Credit</asp:ListItem>
+                        <asp:ListItem>Debit</asp:ListItem>
+                    </asp:RadioButtonList>
+                </td>
+                <td class="style1">
+                <asp:RadioButtonList ID="rdpay" runat="server" CssClass="CheckBox" RepeatDirection="Horizontal"
+                         AutoPostBack="True" onselectedindexchanged="rdpay_SelectedIndexChanged">
+                        <asp:ListItem>Cash</asp:ListItem>
+                        <asp:ListItem>Adjust</asp:ListItem>
+                    </asp:RadioButtonList>
+                </td>
+                </tr>
+                </table>
+                 <table id="Table4" align="right">
+                <tr>
+                <td>
+                <asp:Label ID="lblamt" runat="server" Text="Amount:" CssClass="Label"></asp:Label>
+                </td>
+                
+                <td class="style1">
+                 <asp:TextBox ID="txtamt" runat="server" CssClass="TextBox"></asp:TextBox>
+                </td>
+                <td>
+                 <asp:Label ID="lblvou" runat="server" Text="Voucher No:" CssClass="Label"></asp:Label>
+                </td>
+                
+                <td>
+                 <asp:TextBox ID="txtvou" runat="server" CssClass="TextBox"></asp:TextBox>
+                </td>
+                </tr>
+                <tr>
+                <td>
+                 <asp:Label ID="lblaccno" runat="server" Text="A/C No:" CssClass="Label"></asp:Label>
+                </td>
+                
+                <td class="style1">
+                 <asp:TextBox ID="txtaccno" runat="server" CssClass="TextBox"></asp:TextBox>
+                </td>
+                <td>
+                <asp:Label ID="lblchqno" runat="server" Text="Cheque No:" CssClass="Label"></asp:Label>
+                </td>
+                
+                <td>
+                 <asp:TextBox ID="txtchqno" runat="server" CssClass="TextBox"></asp:TextBox>
+                </td>
+                <td>
+                <asp:Label ID="lbldate1" Text="Date:" runat="server" CssClass="Label"></asp:Label>
+               &nbsp;<asp:TextBox ID="txtdate1" runat="server" AutoPostBack="true" 
+                        ontextchanged="txtdate1_TextChanged"></asp:TextBox>
+                    &nbsp;
+               :
+                <asp:ImageButton  ID="ImageButton1" CssClass="Calender" runat="server" ImageUrl="~/Images/calendar.png" />
+                <asp:CalendarExtender ID="CalendarExtender1"  runat="server" CssClass="black" Enabled="true" Format="dd/MM/yyyy" TargetControlID="txtdate1"  PopupButtonID="ImageButton1">
+             <%-- <asp:CalendarExtender ID="Calender1" runat="server" CssClass="black"
+              Enabled="True" Format="dd/MM/yyyy" PopupButtonID="imgCalender" TargetControlID="Calender1">--%>
+              </asp:CalendarExtender>
+                </td>
+                </tr>
+                <tr>
+                <td align="center">
+                <asp:Label ID="lblnarr" runat="server" Text="Narration:" CssClass="Label"></asp:Label>
+                </td>
+                
+                <td class="style1">
+                 <asp:TextBox ID="txtaddress" runat="server" TextMode="MultiLine" Height="80px" CssClass="TextBox"></asp:TextBox>
+                </td>
+             
+                <td>
+                <br />
+                <br />
+                 <br />
+                <br />
+                 <br />
+                <br />
+                 <br />
+                <br />
+                </td>
+                <td align="right">
+                <asp:Button ID="btnsave" runat="server" Text="Save" Width="95px" 
+                        CssClass="Buttons embossed-link" onclick="btnsave_Click" />
+      <asp:Button ID="btnexit" runat="server" Text="Exit" Width="95px"  
+                        CssClass="Buttons embossed-link" onclick="btnexit_Click" />
+                </td>
+                </tr>
+              </table>
+               
+    </fieldset>
+    
+
+</asp:Content>
+
